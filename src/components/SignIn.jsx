@@ -1,5 +1,6 @@
 import { TextInput, Pressable, View, StyleSheet } from 'react-native'
 import { useFormik } from 'formik'
+import useSignIn from '../hooks/useSignIn'
 import * as yup from 'yup'
 import Text from './Text'
 import theme from '../theme'
@@ -25,12 +26,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10
   }
-});
+})
 
 const initialValues = {
   username: '',
   password: '',
-};
+}
 
 const validationSchema = yup.object().shape({
   username: yup
@@ -48,7 +49,7 @@ const SignInForm = ({ onSubmit }) => {
     initialValues,
     validationSchema,
     onSubmit,
-  });
+  })
 
   return (
     <View style={styles.container}>
@@ -85,15 +86,23 @@ const SignInForm = ({ onSubmit }) => {
         <Text color="textBar">Sign in</Text>
       </Pressable>
     </View>
-  );
-};
+  )
+}
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values);
-  };
+  const [signIn] = useSignIn()
 
-  return <SignInForm onSubmit={onSubmit} />;
-};
+  const onSubmit = async (values) => {
+    const { username, password } = values
+    try {
+      await signIn({ username, password })
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
-export default SignIn;
+
+  return <SignInForm onSubmit={onSubmit} />
+}
+
+export default SignIn
