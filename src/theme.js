@@ -6,12 +6,12 @@ const theme = {
     textSecondary: '#586069',
     textBar: 'white',
     primary: '#0366d6',
-    secondary: '#24292e'
-
+    secondary: '#24292e',
+    tertiary: '#e1e4e8'
   },
   fontSizes: {
-    body: 16,
-    subheading: 16,
+    body: 18,
+    subheading: 18,
   },
   fonts: {
     main: Platform.select({

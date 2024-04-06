@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
   const { data } = useQuery(ME, {
-    onError: (error) => console.log(error)
+    onError: (e) => console.log(e)
   })
 
   const user = data?.me ?? null
@@ -29,16 +29,28 @@ const AppBar = () => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal contentContainerStyle={styles.scroll}>
-        <Link to="/">
-          <AppBarTab text={"Repositories"} />
+        <Link to='/'>
+          <AppBarTab text={'Repositories'} />
         </Link>
-        {
-          user && <SignOut />
+        {user && 
+          <Link to='/review'>
+            <AppBarTab text={'Create a review'} />
+          </Link>
         }
-        {
-          !user &&
-          <Link to="/signin">
-            <AppBarTab text={"Sign in"} />
+        {user && 
+          <Link to='/myreviews'>
+            <AppBarTab text={'My Reviews'} />
+          </Link>
+        }
+        { user && <SignOut /> }
+        {!user &&
+          <Link to='/signin'>
+            <AppBarTab text={'Sign in'} />
+          </Link>
+        }
+        {!user &&
+          <Link to='/signup'>
+            <AppBarTab text={'Sign up'} />
           </Link>
         }
       </ScrollView>

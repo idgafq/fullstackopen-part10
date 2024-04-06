@@ -1,6 +1,7 @@
-import { View, StyleSheet, Image, Dimensions } from "react-native"
+import { View, StyleSheet, Image, Dimensions, TouchableOpacity } from "react-native"
 import Text from "./Text"
 import theme from "../theme"
+import * as Linking from 'expo-linking'
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -8,7 +9,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flexDirection: 'column',
-    marginBottom: 10,
   },
   avatar: {
     height: 50,
@@ -18,14 +18,13 @@ const styles = StyleSheet.create({
   headline: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
-    marginHorizontal: 20,
+    margin:10,
     columnGap: 20,
-    paddingRight: windowWidth * 0.1,
   },
   headlineText: {
     flexDirection: 'column',
     rowGap: 5,
+    flex: 1
   },
   languageContainer: {
     backgroundColor: theme.colors.primary,
@@ -35,14 +34,22 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     flexDirection: 'row',
-    margin: 10,
-    paddingHorizontal: windowWidth * 0.1,
     columnGap: windowWidth * 0.1,
+    alignSelf: 'center'
   },
   details: {
     flexDirection: 'column',
     rowGap: 5,
     alignItems: 'center',
+  },
+  githubButton: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 5,
+    margin: 10,
+    padding: 10,
+  },
+  buttonText: {
+    textAlign: 'center'
   }
 })
 
@@ -50,23 +57,29 @@ const formatToK = (count) => {
   return (count / 1000).toFixed(1) + 'k';
 }
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, displayButton }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="repositoryItem">
       <View style={styles.headline}>
         <Image style={styles.avatar} source={{uri: item.ownerAvatarUrl}} />
         <View style={styles.headlineText}>
-          <Text fontWeight="bold">{item.fullName}</Text>
-          <Text color="textSecondary">{item.description}</Text>
+          <Text fontWeight="bold">
+            {item.fullName}
+          </Text>
+          <Text color="textSecondary">
+            {item.description}
+          </Text>
           <View style={styles.languageContainer}>
-            <Text color={"textBar"}>{item.language}</Text>
+            <Text color={"textBar"}>
+              {item.language}
+            </Text>
           </View>
         </View>
       </View>
       <View style={styles.detailsContainer}>
         <View style={styles.details}>
           <Text fontWeight="bold">
-            {formatToK(item.stargazersCount)}
+            {item.stargazersCount < 1000 ? item.stargazersCount : formatToK(item.stargazersCount)}
           </Text>
           <Text>
             Stars
@@ -74,7 +87,7 @@ const RepositoryItem = ({ item }) => {
         </View>
         <View style={styles.details}>
           <Text fontWeight="bold">
-            {formatToK(item.forksCount)}
+            {item.forksCount < 1000 ? item.forksCount : formatToK(item.forksCount)}
           </Text>
           <Text>
             Forks
@@ -97,6 +110,13 @@ const RepositoryItem = ({ item }) => {
           </Text>
         </View>
       </View>
+      {displayButton && <View style={styles.githubButton}>
+        <TouchableOpacity onPress={() => Linking.openURL(item.url)}>
+          <Text color="textBar" fontWeight="bold" style={styles.buttonText}>
+            Open in Github
+          </Text>
+        </TouchableOpacity>
+      </View>}
     </View>
   )
 }
